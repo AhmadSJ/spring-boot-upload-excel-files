@@ -31,4 +31,4 @@ build/
 .vscode/
 
 ### Database ###
-/Data/
+src/main/resources/Data/
