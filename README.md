@@ -1,4 +1,4 @@
-# Spring Boot Upload/Download Excel Files with MySQL database example
+# Spring Boot Upload/Download Excel Files with H2 database example
 
 For intruction, please visit:
 > [Spring Boot: Upload/Import Excel file data into MySQL Database](https://bezkoder.com/spring-boot-upload-excel-file-database/)
