@@ -1,10 +1,12 @@
 package com.bezkoder.spring.files.excel.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "hardskills")
 public class HardSkill {
@@ -15,30 +17,18 @@ public class HardSkill {
     private long id;
 
     @Column(name = "Code_5e_laag")
-    private String code5elaag;
+    private int code_5e_laag;
 
     @Column(name = "Omschrijving_5e_laag")
-    private String omschrijving5elaag;
+    private String omschrijving_5e_laag;
 
     @Column(name = "Skill_Code")
-    private boolean published;
+    private String skillCode;
 
     @Column(name = "Skill_Omschrijving")
-    private String skillomschrijving;
+    private String skillOmschrijving;
 
     @Column(name = "Essentieel_Optioneel")
-    private String essentieeloptioneel;
+    private String essentieelOptioneel;
 
-    public HardSkill() {
-
-    }
-
-    public HardSkill(String code5elaag, String omschrijving5elaag, boolean published,
-                     String skillomschrijving, String essentieeloptioneel) {
-        this.code5elaag = code5elaag;
-        this.omschrijving5elaag = omschrijving5elaag;
-        this.published = published;
-        this.skillomschrijving = skillomschrijving;
-        this.essentieeloptioneel = essentieeloptioneel;
-    }
 }

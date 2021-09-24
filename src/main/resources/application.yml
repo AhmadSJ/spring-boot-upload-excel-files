@@ -1,8 +1,8 @@
 server.port: 8081
 spring:
   datasource:
-#    url: jdbc:h2:mem:tutorial;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
-    url: jdbc:h2:file:C:/Code/GitRepositories/spring-boot-upload-excel-files/src/main/resources/data/tutorial;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;AUTO_SERVER=true;
+    url: jdbc:h2:mem:tutorial;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
+#    url: jdbc:h2:file:C:/Code/GitRepositories/spring-boot-upload-excel-files/src/main/resources/data/tutorial;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;AUTO_SERVER=true;
     username: sa
     password:
     driver-class-name: org.h2.Driver

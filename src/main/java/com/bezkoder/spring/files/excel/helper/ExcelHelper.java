@@ -8,12 +8,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.bezkoder.spring.files.excel.model.Beroep;
 import com.bezkoder.spring.files.excel.model.HardSkill;
+import com.bezkoder.spring.files.excel.model.SoftSkill;
+import com.bezkoder.spring.files.excel.repository.BeroepRepository;
+import com.bezkoder.spring.files.excel.repository.HardSkillRepository;
+import com.bezkoder.spring.files.excel.repository.SoftSkillRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bezkoder.spring.files.excel.model.Tutorial;
@@ -60,6 +66,7 @@ public class ExcelHelper {
       throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
     }
   }
+
 
   public static List<Tutorial> excelToTutorials(InputStream is) {
     try {
