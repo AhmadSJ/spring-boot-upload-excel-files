@@ -1,6 +1,7 @@
 package com.bezkoder.spring.files.excel.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,6 +25,11 @@ public class ExcelService {
     } catch (IOException e) {
       throw new RuntimeException("fail to store excel data: " + e.getMessage());
     }
+  }
+
+  public void saveFile(FileInputStream file) {
+    List<Tutorial> tutorials = ExcelHelper.excelToTutorials(file);
+    repository.saveAll(tutorials);
   }
 
   public ByteArrayInputStream load() {
