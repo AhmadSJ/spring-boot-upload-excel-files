@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.bezkoder.spring.files.excel.model.HardSkill;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -23,7 +24,6 @@ public class ExcelHelper {
   static String SHEET = "Tutorials";
 
   public static boolean hasExcelFormat(MultipartFile file) {
-
     if (!TYPE.equals(file.getContentType())) {
       return false;
     }
@@ -64,7 +64,6 @@ public class ExcelHelper {
   public static List<Tutorial> excelToTutorials(InputStream is) {
     try {
       Workbook workbook = new XSSFWorkbook(is);
-
       Sheet sheet = workbook.getSheet(SHEET);
       Iterator<Row> rows = sheet.iterator();
 
@@ -90,7 +89,7 @@ public class ExcelHelper {
 
           switch (cellIdx) {
           case 0:
-            tutorial.setId((long) currentCell.getNumericCellValue());
+//            tutorial.setId((long) currentCell.getNumericCellValue());
             break;
 
           case 1:
@@ -102,7 +101,7 @@ public class ExcelHelper {
             break;
 
           case 3:
-            tutorial.setPublished(currentCell.getBooleanCellValue());
+            tutorial.setPublished(Boolean.parseBoolean(currentCell.getStringCellValue()));
             break;
 
           default:
@@ -122,4 +121,5 @@ public class ExcelHelper {
       throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
     }
   }
+
 }
