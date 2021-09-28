@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest
-public class PropertiesTest {
+public class ReadExcelTest {
 
     static String path = "src/test/resources";
 
@@ -27,8 +27,6 @@ public class PropertiesTest {
     private static final String FILE_NAME_TUTORIAL = path_to_resources + "/data.xlsx";
     public static final String FILE_NAME_COMPETENT = path_to_resources + "/CompetentNL_core_hard_soft_skills_v0.3_edited.xlsx";
 
-
-
     @Autowired
     ExcelService fileService;
 
@@ -36,7 +34,7 @@ public class PropertiesTest {
     String foo;
 
     @Test
-    public void test() {
+    public void ReadExcelAndPersistToDatabase_ThenReadExcelAndCompareToDatabase() {
         log.info("Data insertions on test started");
         try {
             FileInputStream excelFile = new FileInputStream(new File(FILE_NAME_TUTORIAL));

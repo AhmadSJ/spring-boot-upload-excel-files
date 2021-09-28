@@ -1,6 +1,9 @@
 package com.bezkoder.spring.files.excel.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -40,5 +43,4 @@ public class HardSkill {
         if(!this.getEssentieelOptioneel().equals(o.getEssentieelOptioneel())) return false;
         return true;
     }
-
 }

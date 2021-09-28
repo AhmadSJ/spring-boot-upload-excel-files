@@ -1,18 +1,18 @@
 package com.bezkoder.spring.files.excel.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import com.bezkoder.spring.files.excel.model.Beroep;
+import com.bezkoder.spring.files.excel.dto.BeroepDto;
+import com.bezkoder.spring.files.excel.dto.HardSkillDto;
+import com.bezkoder.spring.files.excel.dto.SoftSkillDto;
+import com.bezkoder.spring.files.excel.dto.mapper.BeroepMapper;
+import com.bezkoder.spring.files.excel.dto.mapper.HardSkillMapper;
+import com.bezkoder.spring.files.excel.dto.mapper.SoftSkillMapper;
+import com.bezkoder.spring.files.excel.helper.ExcelHelper;
 import com.bezkoder.spring.files.excel.model.HardSkill;
-import com.bezkoder.spring.files.excel.model.SoftSkill;
+import com.bezkoder.spring.files.excel.model.Tutorial;
 import com.bezkoder.spring.files.excel.repository.BeroepRepository;
 import com.bezkoder.spring.files.excel.repository.HardSkillRepository;
 import com.bezkoder.spring.files.excel.repository.SoftSkillRepository;
+import com.bezkoder.spring.files.excel.repository.TutorialRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,9 +24,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bezkoder.spring.files.excel.helper.ExcelHelper;
-import com.bezkoder.spring.files.excel.model.Tutorial;
-import com.bezkoder.spring.files.excel.repository.TutorialRepository;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -71,14 +74,12 @@ public class ExcelService {
     return repository.findAll();
   }
 
-
-
   public void excelToDatabase(InputStream is) {
     try {
       Workbook workbook = new XSSFWorkbook(is);
-      List<HardSkill> hardSkills = new ArrayList<HardSkill>();
-      List<SoftSkill> softSkills = new ArrayList<SoftSkill>();
-      List<Beroep> beroepen = new ArrayList<Beroep>();
+      List<HardSkillDto> hardSkillsDtos = new ArrayList<>();
+      List<SoftSkillDto> softSkillsDtos = new ArrayList<>();
+      List<BeroepDto> beroepDtos = new ArrayList<>();
 
       for(String sheet_name : workbooks_competent){
         Sheet sheet = workbook.getSheet(sheet_name);
@@ -97,21 +98,21 @@ public class ExcelService {
 
           switch (sheet_name) {
             case "CNL_hard_skills_v0_3":
-              hardSkills.add(ExcelHelper.rowToHardSkill(cellsInRow));
+              hardSkillsDtos.add(ExcelHelper.rowToHardSkill(cellsInRow));
               break;
             case "CNL_soft_skills_v0_3":
-              softSkills.add(ExcelHelper.rowToSoftSkill(cellsInRow));
+              softSkillsDtos.add(ExcelHelper.rowToSoftSkill(cellsInRow));
               break;
             case "CNL_beroepen_ISCO_21.1":
-              beroepen.add(ExcelHelper.rowToBeroep(cellsInRow));
+              beroepDtos.add(ExcelHelper.rowToBeroep(cellsInRow));
               break;
           }//switch
         }//while
 
       }//for
-      hardSkillRepository.saveAll(hardSkills);
-      softSkillRepository.saveAll(softSkills);
-      beroepRepository.saveAll(beroepen);
+      hardSkillRepository.saveAll(HardSkillMapper.INSTANCE.getListOfHardSkills(hardSkillsDtos));
+      softSkillRepository.saveAll(SoftSkillMapper.INSTANCE.getListOfSoftSkills(softSkillsDtos));
+      beroepRepository.saveAll(BeroepMapper.INSTANCE.getListOfBeroepen(beroepDtos));
       workbook.close();
     } catch (IOException e) {
       throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
@@ -129,18 +130,19 @@ public class ExcelService {
     return true;
   }
 
-
   public boolean compareExcelToDatabase(InputStream is) {
-    List<HardSkill> hardSkillsFromDatabase = hardSkillRepository.findAll(Sort.by("id").ascending());
-    List<SoftSkill> softSkillsFromDatabase = softSkillRepository.findAll(Sort.by("id").ascending());
-    List<Beroep> beroepenFromDatabase = beroepRepository.findAll(Sort.by("id").ascending());
+    List<HardSkillDto> hardSkillDtosFromDatabase = HardSkillMapper.INSTANCE.getListOfHardSkillDtos(
+            hardSkillRepository.findAll(Sort.by("id").ascending()));
+    List<SoftSkillDto> softSkillDtosFromDatabase = SoftSkillMapper.INSTANCE.getListOfSoftSkillDtos(
+            softSkillRepository.findAll(Sort.by("id").ascending()));
+    List<BeroepDto> beroepDtosFromDatabase = BeroepMapper.INSTANCE.getListOfBeroepDtos(
+            beroepRepository.findAll(Sort.by("id").ascending()));
 
-    boolean same = false;
     try {
       Workbook workbook = new XSSFWorkbook(is);
-      List<HardSkill> hardSkills = new ArrayList<HardSkill>();
-      List<SoftSkill> softSkills = new ArrayList<SoftSkill>();
-      List<Beroep> beroepen = new ArrayList<Beroep>();
+      List<HardSkillDto> hardSkillDtos = new ArrayList<>();
+      List<SoftSkillDto> softSkillDtos = new ArrayList<>();
+      List<BeroepDto> beroepDtos = new ArrayList<>();
 
       for(String sheet_name : workbooks_competent){
         Sheet sheet = workbook.getSheet(sheet_name);
@@ -159,20 +161,20 @@ public class ExcelService {
 
           switch (sheet_name) {
             case "CNL_hard_skills_v0_3":
-              hardSkills.add(ExcelHelper.rowToHardSkill(cellsInRow));
+              hardSkillDtos.add(ExcelHelper.rowToHardSkill(cellsInRow));
               break;
             case "CNL_soft_skills_v0_3":
-              softSkills.add(ExcelHelper.rowToSoftSkill(cellsInRow));
+              softSkillDtos.add(ExcelHelper.rowToSoftSkill(cellsInRow));
               break;
             case "CNL_beroepen_ISCO_21.1":
-              beroepen.add(ExcelHelper.rowToBeroep(cellsInRow));
+              beroepDtos.add(ExcelHelper.rowToBeroep(cellsInRow));
               break;
           }//switch
         }//while
       }//for
-      for(int i =0; i<hardSkills.size(); i++) {
+      for(int i =0; i<hardSkillDtos.size(); i++) {
         try {
-          boolean t = !hardSkills.get(i).equalsItself(hardSkillsFromDatabase.get(i));
+          boolean t = !hardSkillDtos.get(i).equalsItself(hardSkillDtosFromDatabase.get(i));
           if(t){
             System.out.println("Hard Skills are not equal");
             return false;
@@ -184,9 +186,9 @@ public class ExcelService {
         }
       }
 
-      for(int i =0; i<softSkills.size(); i++) {
+      for(int i =0; i<softSkillDtos.size(); i++) {
         try {
-          boolean t = !softSkills.get(i).equalsItself(softSkillsFromDatabase.get(i));
+          boolean t = !softSkillDtos.get(i).equalsItself(softSkillDtosFromDatabase.get(i));
           if(t){
             log.info("Soft Skills are not equal");
             return false;
@@ -198,9 +200,9 @@ public class ExcelService {
         }
       }
 
-      for(int i =0; i<beroepen.size(); i++) {
+      for(int i =0; i<beroepDtos.size(); i++) {
         try {
-          boolean t = !beroepen.get(i).equalsItself(beroepenFromDatabase.get(i));
+          boolean t = !beroepDtos.get(i).equalsItself(beroepDtosFromDatabase.get(i));
           if(t){
             log.info("Beroepen are not equal");
             return false;
