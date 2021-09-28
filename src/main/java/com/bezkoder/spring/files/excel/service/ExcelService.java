@@ -13,12 +13,14 @@ import com.bezkoder.spring.files.excel.model.SoftSkill;
 import com.bezkoder.spring.files.excel.repository.BeroepRepository;
 import com.bezkoder.spring.files.excel.repository.HardSkillRepository;
 import com.bezkoder.spring.files.excel.repository.SoftSkillRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +29,9 @@ import com.bezkoder.spring.files.excel.model.Tutorial;
 import com.bezkoder.spring.files.excel.repository.TutorialRepository;
 
 @Service
+@Slf4j
 public class ExcelService {
+
   @Autowired
   TutorialRepository repository;
 
@@ -67,117 +71,9 @@ public class ExcelService {
     return repository.findAll();
   }
 
-  public HardSkill rowToHardSkill(Iterator<Cell> cellsInRow) {
-    HardSkill hardskill = new HardSkill();
-    int cellIdx = 0;
-    while (cellsInRow.hasNext()){
-      Cell currentCell = cellsInRow.next();
-      switch (cellIdx) {
-        case 0:
-          hardskill.setCode_5e_laag((int) currentCell.getNumericCellValue());
-          break;
-        case 1:
-          hardskill.setOmschrijving_5e_laag(currentCell.getStringCellValue());
-          break;
-        case 2:
-          hardskill.setSkillCode(currentCell.getStringCellValue());
-          break;
-        case 3:
-          hardskill.setEssentieelOptioneel(currentCell.getStringCellValue());
-          break;
-        default:
-          break;
-      }
-      cellIdx++;
-    }
-    return hardskill;
-  }
 
-  public SoftSkill rowToSoftSkill(Iterator<Cell> cellsInRow) {
-    SoftSkill softSkill = new SoftSkill();
-    int cellIdx = 0;
-    while (cellsInRow.hasNext()){
-      Cell currentCell = cellsInRow.next();
-      switch (cellIdx) {
-        case 0:
-          softSkill.setCode_5e_laag((int) currentCell.getNumericCellValue());
-          break;
-        case 1:
-          softSkill.setOmschrijving_5e_laag(currentCell.getStringCellValue());
-          break;
-        case 2:
-          softSkill.setSkillCode(currentCell.getStringCellValue());
-          break;
-        case 3:
-          softSkill.setSkillOmschrijving(currentCell.getStringCellValue());
-          break;
-        case 4:
-          softSkill.setEssentieelOptioneel(currentCell.getStringCellValue());
-          break;
-        default:
-          break;
-      }
-      cellIdx++;
-    }
-    return softSkill;
-  }
 
-  public Beroep rowToBeroep(Iterator<Cell> cellsInRow) {
-    Beroep beroep = new Beroep();
-    int cellIdx = 0;
-    while (cellsInRow.hasNext()){
-      Cell currentCell = cellsInRow.next();
-      switch (cellIdx) {
-        case 0:
-          beroep.setBeroepsCode((int) currentCell.getNumericCellValue());
-          break;
-        case 1:
-          beroep.setOmschrijvingBeroep(currentCell.getStringCellValue());
-          break;
-        case 2:
-          beroep.setBeroepType(currentCell.getStringCellValue());
-          break;
-        case 3:
-          beroep.setBeroepStatus(currentCell.getStringCellValue());
-          break;
-        case 4:
-          beroep.setCode_5e_laag((int) currentCell.getNumericCellValue());
-          break;
-        case 5:
-          beroep.setBeroepen_5e_laag(currentCell.getStringCellValue());
-          break;
-        case 6:
-          beroep.setIsco_code_UG((int) currentCell.getNumericCellValue());
-          break;
-        case 7:
-          beroep.setNl_unit_group_4e_laag(currentCell.getStringCellValue());
-          break;
-        case 8:
-          beroep.setIsco_code_mig((int) currentCell.getNumericCellValue());
-          break;
-        case 9:
-          beroep.setNl_minor_group_3e_laag(currentCell.getStringCellValue());
-          break;
-        case 10:
-          beroep.setIsco_code_sub_mg((int) currentCell.getNumericCellValue());
-          break;
-        case 11:
-          beroep.setIsco_nl_sub_major_group_2e_laag(currentCell.getStringCellValue());
-          break;
-        case 12:
-          beroep.setIsco_code_mg((int) currentCell.getNumericCellValue());
-          break;
-        case 13:
-          beroep.setIsco_nl_major_group_1e_laag(currentCell.getStringCellValue());
-        default:
-          break;
-      }//switch
-      cellIdx++;
-    }//while
-    return beroep;
-  }
-
-  public void excelToEntities(InputStream is) {
+  public void excelToDatabase(InputStream is) {
     try {
       Workbook workbook = new XSSFWorkbook(is);
       List<HardSkill> hardSkills = new ArrayList<HardSkill>();
@@ -201,13 +97,13 @@ public class ExcelService {
 
           switch (sheet_name) {
             case "CNL_hard_skills_v0_3":
-              hardSkills.add(rowToHardSkill(cellsInRow));
+              hardSkills.add(ExcelHelper.rowToHardSkill(cellsInRow));
               break;
             case "CNL_soft_skills_v0_3":
-              softSkills.add(rowToSoftSkill(cellsInRow));
+              softSkills.add(ExcelHelper.rowToSoftSkill(cellsInRow));
               break;
             case "CNL_beroepen_ISCO_21.1":
-              beroepen.add(rowToBeroep(cellsInRow));
+              beroepen.add(ExcelHelper.rowToBeroep(cellsInRow));
               break;
           }//switch
         }//while
@@ -216,12 +112,114 @@ public class ExcelService {
       hardSkillRepository.saveAll(hardSkills);
       softSkillRepository.saveAll(softSkills);
       beroepRepository.saveAll(beroepen);
+      workbook.close();
     } catch (IOException e) {
       throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("Cannot save the file");
     }
+  }
+
+  public boolean testcompare(InputStream is) {
+    List<HardSkill> hardskills = hardSkillRepository.findAll(Sort.by("id").ascending());
+    for(int i=0; i<11; i++) {
+      System.out.println(hardskills.get(i));
+    }
+    return true;
+  }
+
+
+  public boolean compareExcelToDatabase(InputStream is) {
+    List<HardSkill> hardSkillsFromDatabase = hardSkillRepository.findAll(Sort.by("id").ascending());
+    List<SoftSkill> softSkillsFromDatabase = softSkillRepository.findAll(Sort.by("id").ascending());
+    List<Beroep> beroepenFromDatabase = beroepRepository.findAll(Sort.by("id").ascending());
+
+    boolean same = false;
+    try {
+      Workbook workbook = new XSSFWorkbook(is);
+      List<HardSkill> hardSkills = new ArrayList<HardSkill>();
+      List<SoftSkill> softSkills = new ArrayList<SoftSkill>();
+      List<Beroep> beroepen = new ArrayList<Beroep>();
+
+      for(String sheet_name : workbooks_competent){
+        Sheet sheet = workbook.getSheet(sheet_name);
+        Iterator<Row> rows = sheet.iterator();
+        int rowNumber = 0;
+        while(rows.hasNext()) {
+          Row currentRow = rows.next();
+
+          //skip header
+          if (rowNumber ==0) {
+            rowNumber++;
+            continue;
+          }
+
+          Iterator<Cell> cellsInRow = currentRow.iterator();
+
+          switch (sheet_name) {
+            case "CNL_hard_skills_v0_3":
+              hardSkills.add(ExcelHelper.rowToHardSkill(cellsInRow));
+              break;
+            case "CNL_soft_skills_v0_3":
+              softSkills.add(ExcelHelper.rowToSoftSkill(cellsInRow));
+              break;
+            case "CNL_beroepen_ISCO_21.1":
+              beroepen.add(ExcelHelper.rowToBeroep(cellsInRow));
+              break;
+          }//switch
+        }//while
+      }//for
+      for(int i =0; i<hardSkills.size(); i++) {
+        try {
+          boolean t = !hardSkills.get(i).equalsItself(hardSkillsFromDatabase.get(i));
+          if(t){
+            System.out.println("Hard Skills are not equal");
+            return false;
+          }
+        } catch (IndexOutOfBoundsException e){
+          e.printStackTrace();
+          log.info("INDEX OUT OF BOUNDS MUFA");
+          return false;
+        }
+      }
+
+      for(int i =0; i<softSkills.size(); i++) {
+        try {
+          boolean t = !softSkills.get(i).equalsItself(softSkillsFromDatabase.get(i));
+          if(t){
+            log.info("Soft Skills are not equal");
+            return false;
+          }
+        } catch (IndexOutOfBoundsException e){
+          e.printStackTrace();
+          log.info("INDEX OUT OF BOUNDS MUFA");
+          return false;
+        }
+      }
+
+      for(int i =0; i<beroepen.size(); i++) {
+        try {
+          boolean t = !beroepen.get(i).equalsItself(beroepenFromDatabase.get(i));
+          if(t){
+            log.info("Beroepen are not equal");
+            return false;
+          }
+        } catch (IndexOutOfBoundsException e){
+          e.printStackTrace();
+          log.info("INDEX OUT OF BOUNDS MUFA");
+          return false;
+        }
+      }
+    workbook.close();
+    } catch (IOException e) {
+      throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
+    } catch (Exception e) {
+      e.printStackTrace();
+      log.info("Cannot save the file");
+    }
+    log.info("Excel sheet contents are the same as the Database.");
+  return true;
   }
 
 }

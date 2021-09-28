@@ -2,9 +2,11 @@ package com.bezkoder.spring.files.excel.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.io.InputStreamResource;
@@ -27,11 +29,29 @@ import static com.bezkoder.spring.files.excel.controller.MyApplicationListener.F
 @CrossOrigin("http://localhost:8081")
 @Controller
 @RequestMapping("/api/excel")
-
+@Slf4j
 public class ExcelController {
 
   @Autowired
   ExcelService fileService;
+
+  private static final String FILE_NAME_TUTORIAL =
+          "C:/Code/GitRepositories/spring-boot-upload-excel-files/src/main/resources/data.xlsx";
+  public static final String FILE_NAME_COMPETENT =
+          "C:/Code/GitRepositories/spring-boot-upload-excel-files/src/main/resources/CompetentNL_core_hard_soft_skills_v0.3_edited.xlsx";
+
+
+  @GetMapping("/upload")
+  public ResponseEntity<String> compare(){
+    try {
+      FileInputStream excelFile = new FileInputStream(new File(FILE_NAME_COMPETENT));
+      log.info("The excel sheet is equal to the database: " + fileService.compareExcelToDatabase(excelFile));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return ResponseEntity.status(HttpStatus.OK).body("comparison finished");
+  }
+
 
   @PostMapping("/upload")
   public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {

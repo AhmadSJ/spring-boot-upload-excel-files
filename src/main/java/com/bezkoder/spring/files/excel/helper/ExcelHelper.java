@@ -129,4 +129,116 @@ public class ExcelHelper {
     }
   }
 
+  public static HardSkill rowToHardSkill(Iterator<Cell> cellsInRow) {
+    HardSkill hardskill = new HardSkill();
+    int cellIdx = 0;
+    while (cellsInRow.hasNext()){
+      Cell currentCell = cellsInRow.next();
+      switch (cellIdx) {
+        case 0:
+          hardskill.setCode_5e_laag((int) currentCell.getNumericCellValue());
+          break;
+        case 1:
+          hardskill.setOmschrijving_5e_laag(currentCell.getStringCellValue());
+          break;
+        case 2:
+          hardskill.setSkillCode(currentCell.getStringCellValue());
+          break;
+        case 3:
+          hardskill.setSkillOmschrijving(currentCell.getStringCellValue());
+        case 4:
+          hardskill.setEssentieelOptioneel(currentCell.getStringCellValue());
+          break;
+        default:
+          break;
+      }
+      cellIdx++;
+    }
+    return hardskill;
+  }
+
+  public static SoftSkill rowToSoftSkill(Iterator<Cell> cellsInRow) {
+    SoftSkill softSkill = new SoftSkill();
+    int cellIdx = 0;
+    while (cellsInRow.hasNext()){
+      Cell currentCell = cellsInRow.next();
+      switch (cellIdx) {
+        case 0:
+          softSkill.setCode_5e_laag((int) currentCell.getNumericCellValue());
+          break;
+        case 1:
+          softSkill.setOmschrijving_5e_laag(currentCell.getStringCellValue());
+          break;
+        case 2:
+          softSkill.setSkillCode(currentCell.getStringCellValue());
+          break;
+        case 3:
+          softSkill.setSkillOmschrijving(currentCell.getStringCellValue());
+          break;
+        case 4:
+          softSkill.setEssentieelOptioneel(currentCell.getStringCellValue());
+          break;
+        default:
+          break;
+      }
+      cellIdx++;
+    }
+    return softSkill;
+  }
+
+  public static Beroep rowToBeroep(Iterator<Cell> cellsInRow) {
+    Beroep beroep = new Beroep();
+    int cellIdx = 0;
+    while (cellsInRow.hasNext()){
+      Cell currentCell = cellsInRow.next();
+      switch (cellIdx) {
+        case 0:
+          beroep.setBeroepsCode((int) currentCell.getNumericCellValue());
+          break;
+        case 1:
+          beroep.setOmschrijvingBeroep(currentCell.getStringCellValue());
+          break;
+        case 2:
+          beroep.setBeroepType(currentCell.getStringCellValue());
+          break;
+        case 3:
+          beroep.setBeroepStatus(currentCell.getStringCellValue());
+          break;
+        case 4:
+          beroep.setCode_5e_laag((int) currentCell.getNumericCellValue());
+          break;
+        case 5:
+          beroep.setBeroepen_5e_laag(currentCell.getStringCellValue());
+          break;
+        case 6:
+          beroep.setIsco_code_UG((int) currentCell.getNumericCellValue());
+          break;
+        case 7:
+          beroep.setNl_unit_group_4e_laag(currentCell.getStringCellValue());
+          break;
+        case 8:
+          beroep.setIsco_code_mig((int) currentCell.getNumericCellValue());
+          break;
+        case 9:
+          beroep.setNl_minor_group_3e_laag(currentCell.getStringCellValue());
+          break;
+        case 10:
+          beroep.setIsco_code_sub_mg((int) currentCell.getNumericCellValue());
+          break;
+        case 11:
+          beroep.setIsco_nl_sub_major_group_2e_laag(currentCell.getStringCellValue());
+          break;
+        case 12:
+          beroep.setIsco_code_mg((int) currentCell.getNumericCellValue());
+          break;
+        case 13:
+          beroep.setIsco_nl_major_group_1e_laag(currentCell.getStringCellValue());
+        default:
+          break;
+      }//switch
+      cellIdx++;
+    }//while
+    return beroep;
+  }
+
 }

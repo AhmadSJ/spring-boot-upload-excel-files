@@ -1,14 +1,15 @@
 package com.bezkoder.spring.files.excel.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
-@Table(name = "hardskills")
+@Table(name = "hardskill")
 public class HardSkill {
 
     @Id
@@ -30,5 +31,14 @@ public class HardSkill {
 
     @Column(name = "Essentieel_Optioneel")
     private String essentieelOptioneel;
+
+    public boolean equalsItself(HardSkill o) {
+        if(this.getCode_5e_laag()!=o.getCode_5e_laag()) return false;
+        if(!this.getOmschrijving_5e_laag().equals(o.getOmschrijving_5e_laag())) return false;
+        if(!this.getSkillCode().equals(o.getSkillCode())) return false;
+        if(!this.getSkillOmschrijving().equals(o.getSkillOmschrijving())) return false;
+        if(!this.getEssentieelOptioneel().equals(o.getEssentieelOptioneel())) return false;
+        return true;
+    }
 
 }

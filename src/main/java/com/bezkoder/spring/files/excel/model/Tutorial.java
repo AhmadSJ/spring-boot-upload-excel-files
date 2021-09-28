@@ -1,10 +1,13 @@
 package com.bezkoder.spring.files.excel.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "tutorials")
 public class Tutorial {
