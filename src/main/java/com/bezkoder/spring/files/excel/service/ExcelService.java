@@ -98,13 +98,13 @@ public class ExcelService {
 
           switch (sheet_name) {
             case "CNL_hard_skills_v0_3":
-              hardSkillsDtos.add(ExcelHelper.rowToHardSkill(cellsInRow));
+              hardSkillsDtos.add(ExcelHelper.rowToHardSkillDto(cellsInRow));
               break;
             case "CNL_soft_skills_v0_3":
-              softSkillsDtos.add(ExcelHelper.rowToSoftSkill(cellsInRow));
+              softSkillsDtos.add(ExcelHelper.rowToSoftSkillDto(cellsInRow));
               break;
             case "CNL_beroepen_ISCO_21.1":
-              beroepDtos.add(ExcelHelper.rowToBeroep(cellsInRow));
+              beroepDtos.add(ExcelHelper.rowToBeroepDto(cellsInRow));
               break;
           }//switch
         }//while
@@ -161,13 +161,13 @@ public class ExcelService {
 
           switch (sheet_name) {
             case "CNL_hard_skills_v0_3":
-              hardSkillDtos.add(ExcelHelper.rowToHardSkill(cellsInRow));
+              hardSkillDtos.add(ExcelHelper.rowToHardSkillDto(cellsInRow));
               break;
             case "CNL_soft_skills_v0_3":
-              softSkillDtos.add(ExcelHelper.rowToSoftSkill(cellsInRow));
+              softSkillDtos.add(ExcelHelper.rowToSoftSkillDto(cellsInRow));
               break;
             case "CNL_beroepen_ISCO_21.1":
-              beroepDtos.add(ExcelHelper.rowToBeroep(cellsInRow));
+              beroepDtos.add(ExcelHelper.rowToBeroepDto(cellsInRow));
               break;
           }//switch
         }//while

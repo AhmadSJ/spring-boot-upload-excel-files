@@ -124,7 +124,7 @@ public class ExcelHelper {
     }
   }
 
-  public static HardSkillDto rowToHardSkill(Iterator<Cell> cellsInRow) {
+  public static HardSkillDto rowToHardSkillDto(Iterator<Cell> cellsInRow) {
     HardSkillDto hardSkillDto = new HardSkillDto();
     int cellIdx = 0;
     while (cellsInRow.hasNext()){
@@ -152,7 +152,7 @@ public class ExcelHelper {
     return hardSkillDto;
   }
 
-  public static SoftSkillDto rowToSoftSkill(Iterator<Cell> cellsInRow) {
+  public static SoftSkillDto rowToSoftSkillDto(Iterator<Cell> cellsInRow) {
     SoftSkillDto softSkillDto = new SoftSkillDto();
     int cellIdx = 0;
     while (cellsInRow.hasNext()){
@@ -181,7 +181,7 @@ public class ExcelHelper {
     return softSkillDto;
   }
 
-  public static BeroepDto rowToBeroep(Iterator<Cell> cellsInRow) {
+  public static BeroepDto rowToBeroepDto(Iterator<Cell> cellsInRow) {
     BeroepDto beroepDto = new BeroepDto();
     int cellIdx = 0;
     while (cellsInRow.hasNext()){
