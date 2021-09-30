@@ -17,10 +17,13 @@ import java.io.FileNotFoundException;
 @Slf4j
 public class MyApplicationListener implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final String FILE_NAME_TUTORIAL =
-            "C:/Code/GitRepositories/spring-boot-upload-excel-files/src/main/resources/data.xlsx";
-    public static final String FILE_NAME_COMPETENT =
-            "C:/Code/GitRepositories/spring-boot-upload-excel-files/src/main/resources/CompetentNL_core_hard_soft_skills_v0.3_edited.xlsx";
+    static String path = "src/test/resources";
+
+    static File resource_directory = new File(path);
+    static String path_to_resources = resource_directory.getAbsolutePath();
+
+    private static final String FILE_NAME_TUTORIAL = path_to_resources + "/data.xlsx";
+    public static final String FILE_NAME_COMPETENT = path_to_resources + "/CompetentNL_core_hard_soft_skills_v0.3_edited.xlsx";
 
     @Autowired
     ExcelService fileService;
